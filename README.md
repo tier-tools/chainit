@@ -1,5 +1,5 @@
 # ChainIt
-[![CircleCI](https://circleci.com/gh/spark-solutions/chain_it/tree/master.svg?style=svg&circle-token=3bb16aef0dbcbe7fd18500376a110bd6cedf668a)](https://circleci.com/gh/spark-solutions/ChainIt/tree/master)
+[![CircleCI](https://circleci.com/gh/tier-tools/chainit/tree/master.svg?style=svg)](https://circleci.com/gh/tier-tools/chainit/tree/master)
 
 ## Description
 This provides the tool which is implementation of railway-oriented programming concept itself
@@ -54,7 +54,7 @@ ChainIt.new.
 ```
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/spark-solutions/chain_it.
+Bug reports and pull requests are welcome on GitHub at https://github.com/tier-tools/chainit
 
 ## License
 

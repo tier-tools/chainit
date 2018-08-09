@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'A tool for executing successive tasks in a railway-oriented manner'
   spec.description   = "It can successfully replace conceptually similar libraries like Dry-transaction. It's all because of the simplicity its code offers."
-  spec.homepage      = 'https://github.com/spark-solutions/chain_it'
+  spec.homepage      = 'https://github.com/tier-tools/chainit'
   spec.license       = 'MIT'
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
