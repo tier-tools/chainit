@@ -142,6 +142,6 @@ RSpec.describe ChainIt do
   end
 
   it 'has a version number' do
-    expect(ChainIt::VERSION).to eq '1.1.0'
+    expect(ChainIt::VERSION).to eq '1.2.0'
   end
 end
