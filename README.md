@@ -1,6 +1,6 @@
 # ChainIt
 ### Gain full control over what is going in your code!
-[![CircleCI](https://circleci.com/gh/tier-tools/chainit/tree/master.svg?style=svg)](https://circleci.com/gh/tier-tools/chainit/tree/master)
+[![Build Status](https://travis-ci.com/tier-tools/chainit.svg?branch=master)](https://travis-ci.com/tier-tools/chainit)
 
 ## What exactly is `ChainIt`?
 It's the  Ruby implementation of a railway-oriented programming concept. <a href="https://fsharpforfunandprofit.com/rop">read more</a>
