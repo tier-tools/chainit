@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ChainIt do
@@ -8,24 +10,57 @@ RSpec.describe ChainIt do
     it 'always returns it\'s receiver' do
       expect(subject.chain { service_object.call }).to eq subject
     end
+
+    context 'when block responds with invalid object' do
+      let(:result_object) { Struct.new('Result') }
+
+      it 'responds with self explanatory error' do
+        expect { subject.chain { service_object.call } }
+          .to raise_error(StandardError, ChainIt::INVALID_RESULT_MSG)
+      end
+    end
+
+    context 'when the code within the block raises error' do
+      subject { described_class.new(opts) }
+
+      before { allow(subject).to receive(:result_value).and_raise }
+
+      context 'with :auto_exception_handling mode' do
+        context 'enabled' do
+          let(:opts) { { auto_exception_handling: true } }
+
+          it 'rescues the error' do
+            expect { subject.chain { service_object.call } }.not_to raise_error
+          end
+        end
+
+        context 'disabled' do
+          let(:opts) { { auto_exception_handling: false } }
+
+          it 're-raises the error' do
+            expect { subject.chain { service_object.call } }.to raise_error
+          end
+        end
+      end
+    end
   end
 
   describe '#skip_next' do
     context 'when passed block evaluates to true' do
       it 'skips the next #chain execution' do
-	expect(service_object).not_to receive(:call)
+        expect(service_object).not_to receive(:call)
 
-	subject.skip_next { true }.
-	        chain { service_object.call }
+        subject.skip_next { true }
+               .chain { service_object.call }
       end
     end
 
     context 'when passed block evaluates to false' do
       it 'does not skip the next #chain execution' do
-       	expect(service_object).to receive(:call)
+        expect(service_object).to receive(:call)
 
-        subject.skip_next { false }.
-                chain { service_object.call }
+        subject.skip_next { false }
+               .chain { service_object.call }
       end
     end
   end
@@ -38,19 +73,34 @@ RSpec.describe ChainIt do
 
     context 'when all the chanis are successful' do
       it 'returns the last chain\'s response' do
-        expect(subject.chain { service_object.call }.
-                       chain { service_object2.call }.
-                       result).to eq result_object2
+        expect(subject.chain { service_object.call }
+                       .chain { service_object2.call }
+                       .result).to eq result_object2
       end
     end
 
     context 'when some chain is failed' do
       let(:result_object) { double('result object', failure?: true, value: false) }
 
+      context 'by raising the exception' do
+        subject { described_class.new(opts) }
+
+        before { allow(subject).to receive(:result_value).and_raise }
+
+        context 'with auto_exception_handling mode enabled' do
+          let(:opts) { { auto_exception_handling: true } }
+
+          it 'returns the error object' do
+            expect(subject.chain { service_object.call }
+                           .result).to be_a StandardError
+          end
+        end
+      end
+
       it 'returns the last successful chain\'s response' do
-        expect(subject.chain { service_object.call }.
-                       chain { service_object2.call }.
-                       result).to eq result_object
+        expect(subject.chain { service_object.call }
+                       .chain { service_object2.call }
+                       .result).to eq result_object
       end
     end
   end
@@ -92,6 +142,6 @@ RSpec.describe ChainIt do
   end
 
   it 'has a version number' do
-    expect(ChainIt::VERSION).to eq '1.0.0'
+    expect(ChainIt::VERSION).to eq '1.2.0'
   end
 end

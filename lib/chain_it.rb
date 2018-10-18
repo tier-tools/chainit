@@ -1,4 +1,11 @@
 class ChainIt
+  DEFAULT_SETTINGS = { auto_exception_handling: false }.freeze
+  INVALID_RESULT_MSG = "ChainIt#chain block must return both #value and #failure? aware object.\n Check documentation: https://github.com/spark-solutions/chain_it#usage"
+
+  def initialize(settings = {})
+    @settings = DEFAULT_SETTINGS.merge(settings)
+  end
+
   def chain
     if @skip_next
       @skip_next = false
@@ -7,26 +14,51 @@ class ChainIt
 
     return self if @skip
     @skip_next = false
-    @result = yield @result&.value
-    @skip = true if @result.failure?
+
+    @result = yield result_value
+    @skip = true if result_failure?
+    self
+  rescue StandardError => e
+    raise e unless @settings[:auto_exception_handling]
+
+    e.define_singleton_method(:value) { e }
+    @result = e
+
+    @skip = true
     self
   end
 
   def skip_next
     return self if @skip
-    @skip_next = yield @result&.value
+    @skip_next = yield result_value
     self
   end
 
   def on_error
     return self unless @skip
-    yield @result&.value
+    yield result_value
     @skip = false
     self
   end
 
   def result
     @result
+  end
+
+  private
+
+  def handle_wrong_result_api
+    yield
+  rescue NoMethodError
+    raise StandardError.new INVALID_RESULT_MSG
+  end
+
+  def result_value
+    handle_wrong_result_api { @result&.value }
+  end
+
+  def result_failure?
+    handle_wrong_result_api { @result.failure? }
   end
 end
 
