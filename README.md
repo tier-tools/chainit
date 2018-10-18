@@ -9,6 +9,9 @@ The gem makes it super easy to control complex operations flow - the next step w
 
 Ideally suited for handling task sequences that should be  interrupted as soon as any subsequent task fails.
 
+## Supported Ruby versions
+`ChainIt` is currently tested to work well on MRI Ruby ~> 2.3.
+
 ## How should I use `ChainIt`?
 As not hard to guess, all is about chaining subsequent `#chain` method calls to a `ChainIt` instance.
 
