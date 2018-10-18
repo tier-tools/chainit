@@ -10,12 +10,12 @@ The gem makes it super easy to control complex operations flow - the next step w
 Ideally suited for handling task sequences that should be  interrupted as soon as any subsequent task fails.
 
 ## How should I use `ChainIt`?
-As not hard to guess, alll is about chaining subsequent `#chain` method calls to a `ChainIt` instance.
+As not hard to guess, all is about chaining subsequent `#chain` method calls to a `ChainIt` instance.
 
 ### Prerequisites
 The gem supports design-by-contract programming concept assuming `ChainIt` will be used together with both `#value` and `#failure?` aware object that have to be returned by every `#chain`related block. It is used to consider the operation successful or failed.
 
-We reccomend using `Struct`:
+We recommend using `Struct`:
 
 ```ruby
 Result = Struct.new(:success, :value) do
@@ -29,7 +29,7 @@ end
 `#initialize` - Initiates the operation. Auto exception handling mode is configurable here. (see examples section)</br>
 `#chain` - Performs the code in its related block and memorizes the internal result value. This is done only when the state of the operation allows it.</br>
 `#skip_next` - Skips the next `#chain` call when it's block evaluates to `true`.</br>
-`#result` - The result of the operation representing succes of failure. </br>
+`#result` - The result of the operation representing success of failure. </br>
 
 ### `ChainIt` modes
 `auto_exception_handling` - default `false` - Decide if any `StandardError` exception should be rescued from any `#chain` call. If so the rescued exception will be memorized as operation result object.
